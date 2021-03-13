@@ -10,14 +10,12 @@ const App = () => {
   return (
     <Router>
       <NavBar></NavBar>
-      <main>
         <Switch>
           <Route path="/ventas" component={Ventas} />
           <Route path="/gastos" component={Gastos} />
           <Route path="/pendientes" component={Pendientes} />
           <Route path="/" component={Inicio} />
         </Switch>
-      </main>
     </Router>
   )
 }
