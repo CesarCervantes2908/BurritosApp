@@ -6,6 +6,10 @@ ventasRouter.param('date', (req, res, next, date)=>{
     req.date = date;
     next();
 });
+ventasRouter.param('id', (req, res, next, id) => {
+    req.id = id;
+    next();
+});
 
 ventasRouter.post('/days/:date/cuentas',async(req, res, next)=>{
     try {
@@ -20,6 +24,15 @@ ventasRouter.get('/days/:date/cuentas', async(req, res, next)=>{
     try {
         let bills = await billController.getAllBillsByDate(req.date);
         res.status(200).send(bills);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+});
+ventasRouter.get('/days/:date/cuentas/:id', async(req, res, next)=>{
+    try {
+        let bill = await billController.getBillByID(req.id);
+        res.status(200).send(bill);
     } catch (error) {
         console.log(error);
         res.status(500).send(error);

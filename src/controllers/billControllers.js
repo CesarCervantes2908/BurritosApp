@@ -22,5 +22,13 @@ exports.getAllBillsByDate = async(date)=>{
         return error;
     }
 };
+exports.getBillByID = async(id)=>{
+    try {
+        let bill = await Bill.findById(id);
+        return bill;
+    } catch (error) {
+        return error;
+    }
+};
 //---------------------------------UPDATE CONTROLLERS------------------------------------------
 //---------------------------------DELETE CONTROLLERS------------------------------------------
