@@ -13,8 +13,8 @@ const App = () => {
     <Router>
       <NavBar></NavBar>
         <Switch>
-          <Route path="/ventas/day/:date/cuentas/edit/:id" component={EditBill} />
-          <Route path="/ventas/day/:date" component={SellingDay} />
+          <Route path="/ventas/days/:date/cuentas/edit/:id" component={EditBill} />
+          <Route path="/ventas/days/:date" component={SellingDay} />
           <Route path="/ventas" component={Ventas} />
           <Route path="/gastos" component={Gastos} />
           <Route path="/pendientes" component={Pendientes} />

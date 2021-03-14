@@ -29,7 +29,7 @@ const Ventas = () => {
                         {sellingDays.map(({date, total})=>(
                             <tr className="table-active" key={date}>
                                 <th scope="row">
-                                    <Link to={`/ventas/day/${date}`}>{date}</Link>
+                                    <Link to={`/ventas/days/${date}`}>{date}</Link>
                                 </th>
                                 <td>${total}</td>
                             </tr>

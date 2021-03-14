@@ -19,7 +19,8 @@ const EditBill = ({ match, history}) => {
             quantity: 1
         }],
         billName: "Cliente 1",
-        billTotal: 0
+        billTotal: 0,
+        isClosed: false
     });
     useEffect(()=>{
         let total = parseTotal(bill.products);
