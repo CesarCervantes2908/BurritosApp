@@ -3,7 +3,8 @@ import { parseTotal } from '../utils/helperFunction';
 
 const BillCard = ({ bill, addProduct, substractProduct }) => {
     const renderTableBody = ()=>{
-        return bill['products'].map(prodcutInfo=>(
+        let arrayOfProducts = bill['products'] || [];
+        return arrayOfProducts.map(prodcutInfo=>(
             <tr className="table-light" key={prodcutInfo.name}>
                 <td>{prodcutInfo.quantity}</td>
                 <td>${prodcutInfo.price}</td>

@@ -31,9 +31,9 @@ exports.getBillByID = async(id)=>{
     };
 };
 //---------------------------------UPDATE CONTROLLERS------------------------------------------
-exports.updateBillProductsByID = async(id, products)=>{
+exports.updateBillByID = async(id, bill)=>{
     try {
-      let updatedBill = await Bill.findByIdAndUpdate(id, { products }, {new: true});  
+      let updatedBill = await Bill.findByIdAndUpdate(id, bill, {new: true});  
       return updatedBill;
     } catch (error) {
         return error;

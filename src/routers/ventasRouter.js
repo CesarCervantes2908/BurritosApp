@@ -25,29 +25,30 @@ ventasRouter.post('/days/:date/cuentas',async(req, res, next)=>{
 ventasRouter.get('/days/:date/cuentas', async(req, res, next)=>{
     try {
         let bills = await billController.getAllBillsByDate(req.date);
-        res.status(200).send(bills);
+        res.status(200).json({data: bills});
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        res.status(500).json({error});
     }
 });
 ventasRouter.get('/days/:date/cuentas/:id', async(req, res, next)=>{
     try {
         let bill = await billController.getBillByID(req.id);
-        res.status(200).send(bill);
+        res.status(200).json({data: bill}); 
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        res.status(500).json({ error });
     }
 });
 //-------------------------------------------PUT ROUTES------------------------------------------------------//
 ventasRouter.put('/days/:date/cuentas/:id/edit/products', async(req, res, next)=>{
     try {
-        let updatedBill = await billController.updateBillProductsByID(req.id, req.body.products);
-        res.status(200).send(updatedBill);
+        let updatedBill = await billController.updateBillByID(req.id, req.body);
+        console.log(updatedBill);
+        res.status(200).json({data: updatedBill});
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        res.status(500).json({ error });
     }
 });
 ventasRouter.put('/days/:date/cuentas/:id/edit/close', async(req, res, next)=>{

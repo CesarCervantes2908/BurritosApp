@@ -4,9 +4,11 @@ exports.parseDate = ()=>{
 };
 exports.parseTotal = (bill)=>{
     let total = 0;
-    bill.forEach(prodcut => {
-        total += (prodcut.price * prodcut.quantity);
-    });
+    if(bill && bill.length > 0){
+        bill.forEach(prodcut => {
+            total += (prodcut.price * prodcut.quantity);
+        });
+    };
     return total;
 };
 
