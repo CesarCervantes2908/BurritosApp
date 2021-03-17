@@ -7,15 +7,22 @@ const Ventas = () => {
     const [isSellingDayStarted, setIsSellingDayStarted] = useState(false);
     const [sellingDays, setSellingDays] = useState([]);
     const [newDayLink, setNewDayLink] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [isLoadingButton, setIsLoadingButton] = useState(false);
+    const [errorButton, setErrorButton] = useState('');
     useEffect(()=>{
         console.log("Efecto!");
         const fetchDays = async()=>{
+            setIsLoading(true);
             try {
                 let response = await fetch(`/api/v1/bussiness/days`);
                 let {data} = await response.json();
                 console.log(data);
+                setIsLoading(false);
                 setSellingDays(data);
             } catch (error) {
+                setError("Hubo un Error. Por favor refresque la página");
                 console.log();
             };
         };
@@ -29,6 +36,7 @@ const Ventas = () => {
         setDate(todayDate);
     }, []);
     const createNewDay = async()=>{
+        setIsLoadingButton(true);
         try {
             let response = await fetch(`/api/v1/bussiness/days/${date}`,{
                 method: 'POST',
@@ -38,43 +46,61 @@ const Ventas = () => {
             });
             let { data } = await response.json();
             if(data){
-                
+                setIsLoadingButton(false);
+                setNewDayLink(`/ventas/days/${date}`);
+            }else{
+                throw new Error();
             };
         } catch (error) {
+            setIsLoadingButton(false);
+            setErrorButton("Lo sentimos, el día de ventas NO pudo ser creado.");
+            let timeout = setTimeout(()=>{
+                setErrorButton('');
+                clearTimeout(timeout);
+            }, 3000);
             console.log(error);
         }
     };
-    return (       
+    return (   
         <main main className = "container pt-4" >
-            <div className="row"><h1 className="mx-auto">Ventas</h1></div>
-            {!isSellingDayStarted &&
-            <div className="row mt-3">
-                <button className="btn btn-primary btn-block" onClick={createNewDay}>
-                    Empezar Día de Venta
-                            </button>
-            </div>
-            }
-            <div className="row mt-5"><h3>Días de Venta</h3></div>
-            <div className="row mt-2">
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sellingDays.map(({date, totalSold})=>(
-                            <tr className="table-active" key={date}>
-                                <th scope="row">
-                                    <Link to={`/ventas/days/${date}`}>{date}</Link>
-                                </th>
-                                <td>${totalSold}</td>
+        {newDayLink ? <Redirect push to={`${newDayLink}`}/> : 
+            <>
+                <div className="row"><h1 className="mx-auto">Ventas</h1></div>
+                {isLoadingButton ? <h2 className="mx-auto">Creando ...</h2>
+                : errorButton ? <h2 className="mx-auto text-danger">{errorButton}</h2>
+                : (!isSellingDayStarted &&
+                <div className="row mt-3">
+                    <button className="btn btn-primary btn-block" onClick={createNewDay}>
+                        Empezar Día de Venta
+                                </button>
+                </div>)
+                }
+                <div className="row mt-5"><h3>Días de Venta</h3></div>
+                <div className="row mt-2">
+                    {isLoading ? <h2 className="mx-auto">Cargando ...</h2>
+                    :error ? <h2 className="mx-auto text-danger">{error}</h2>
+                    :<table className="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Total</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {sellingDays.map(({date, totalSold})=>(
+                                <tr className="table-active" key={date}>
+                                    <th scope="row">
+                                        <Link to={`/ventas/days/${date}`}>{date}</Link>
+                                    </th>
+                                    <td>${totalSold}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    }
+                </div>
+            </>
+        }    
         </main>
     );
 };
