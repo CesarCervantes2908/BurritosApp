@@ -15,16 +15,5 @@ const sellingDaySchema = new mongoose.Schema({
     }
 });
 
-const bussinessSchema = new mongoose.Schema({
-    totalAmount: {
-        type: Number,
-        default: 0
-    },
-    sellingDays: {
-        type: [sellingDaySchema],
-        required: [true, "Debe haber días de venta"]
-    }
-});
-
-const Bussiness = mongoose.model('Bussiness', bussinessSchema);
-module.exports = Bussiness;
+const SellingDay = mongoose.model('SellingDay', sellingDaySchema);
+module.exports = SellingDay;

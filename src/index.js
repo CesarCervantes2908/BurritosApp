@@ -16,6 +16,7 @@ app.use('/api/v1', APIRouter);
 
 //---------------------------------------SETUP--------------------------------------------
 if(process.env.NODE_ENV === 'development'){
+    console.log("Development Enviroment");
     const morgan = require('morgan');
     app.use(morgan('dev'));
 };
