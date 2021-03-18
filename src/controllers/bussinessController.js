@@ -18,6 +18,7 @@ exports.createDay = async (newDate) => {
 exports.getBussiness = async()=>{
     try {
         let bussiness = await Bussiness.findOne({});
+        return bussiness;
     } catch (error) {
         return error;
     }

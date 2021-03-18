@@ -71,9 +71,9 @@ bussinessRouter.put('/days/:date/close', async(req, res, next)=>{
         let queryResponse = await bussinessController.closeDayByDate(req.date, req.body.dayTotal);
         if(queryResponse.nModified > 0){
             let updatedDay = await bussinessController.getDayByDate(req.date);
-            res.status(200).send(updatedDay);
+            res.status(200).json({data: updatedDay});
         }else{
-            res.status(500).send("El día no existe en la BD");
+            res.status(500).json({error: "El día no existe en la BD"});
         };
     } catch (error) {
         console.log(error)
@@ -83,7 +83,7 @@ bussinessRouter.put('/days/:date/close', async(req, res, next)=>{
 bussinessRouter.put('/total', async(req, res, next)=>{
     try {
         let updateBussines = await bussinessController.updateBussinessTotal(req.body.newTotal);
-        res.send(updateBussines);
+        res.json({data: updateBussines});
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error.message });

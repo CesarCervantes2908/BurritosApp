@@ -13,6 +13,23 @@ const Ventas = () => {
     const [errorButton, setErrorButton] = useState('');
     const [bussinessTotal, setBussinessTotal] = useState(0);
     useEffect(()=>{
+        let updateBussinessTotal = async()=>{
+            if(bussinessTotal === 0) return;
+            try {
+                let response = await fetch(`/api/v1/bussiness/total`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ newTotal: bussinessTotal })
+                });
+            } catch (error) {
+                console.log(error);
+            };
+        };
+        updateBussinessTotal();
+    }, [bussinessTotal]);
+    useEffect(()=>{
         const fetchDays = async()=>{
             setIsLoading(true);
             try {
