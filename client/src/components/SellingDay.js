@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import useQuery from '../hooks/useQuery';
+import { formatDate } from '../utils/helperFunction';
 
 const SellingDay = ({ history, match }) => {
     let query = useQuery().get("closed");
@@ -72,7 +73,7 @@ const SellingDay = ({ history, match }) => {
     return (
         <main className="container pt-3">
             <div className="row">
-                <h1 className="mx-auto text-center">Ventas del {dayDate}</h1>
+                <h1 className="mx-auto text-center">Ventas del {formatDate(dayDate)}</h1>
             </div>
             {!isDayClosed && <div className="row mt-5">
                 <Link to={`/ventas/days/${dayDate}/cuentas/edit/nueva`} className="mx-auto">

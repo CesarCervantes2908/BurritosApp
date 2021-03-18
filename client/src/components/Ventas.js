@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom';
-import { parseDate } from '../utils/helperFunction';
+import { formatDate, parseDate, sortDates } from '../utils/helperFunction';
 
 const Ventas = () => {
     const [date, setDate] = useState('');
@@ -18,9 +18,9 @@ const Ventas = () => {
             try {
                 let response = await fetch(`/api/v1/bussiness/days`);
                 let {data} = await response.json();
-                console.log(data);
                 setIsLoading(false);
-                setSellingDays(data);
+                let sortDays = sortDates(data.slice());
+                setSellingDays(sortDays);
             } catch (error) {
                 setError("Hubo un Error. Por favor refresque la página");
                 console.log();
@@ -102,7 +102,9 @@ const Ventas = () => {
                                     key={sellingDayDate}
                                     >
                                     <th scope="row">
-                                        <Link to={`/ventas/days/${sellingDayDate}?closed=${isClosed}`}>{sellingDayDate}</Link>
+                                        <Link to={`/ventas/days/${sellingDayDate}?closed=${isClosed}`}>
+                                            {formatDate(sellingDayDate)}
+                                        </Link>
                                     </th>
                                     <td>{isClosed? `$${totalSold}` : "Abierto..."}</td>
                                 </tr>
