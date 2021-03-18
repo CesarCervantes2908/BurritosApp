@@ -68,7 +68,7 @@ bussinessRouter.put('/days/:date', async(req, res, next)=>{
 });
 bussinessRouter.put('/days/:date/close', async(req, res, next)=>{
     try {
-        let queryResponse = await bussinessController.closeDayByDate(req.date);
+        let queryResponse = await bussinessController.closeDayByDate(req.date, req.body.dayTotal);
         if(queryResponse.nModified > 0){
             let updatedDay = await bussinessController.getDayByDate(req.date);
             res.status(200).send(updatedDay);

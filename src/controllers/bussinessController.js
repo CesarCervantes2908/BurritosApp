@@ -54,11 +54,12 @@ exports.updateDayTotalByDate = async (date, newTotal) => {
         return error;
     };
 };
-exports.closeDayByDate = async (date) => {
+exports.closeDayByDate = async (date, newTotal) => {
     try {
         let updated = await Bussiness.updateOne({ "sellingDays.date": date }, {
             $set: {
-                "sellingDays.$.isClosed": true
+                "sellingDays.$.isClosed": true,
+                "sellingDays.$.totalSold": newTotal
             }
         });
         console.log(updated);

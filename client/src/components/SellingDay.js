@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import useQuery from '../hooks/useQuery';
 
-const SellingDay = ({ match }) => {
+const SellingDay = ({ history, match }) => {
+    let query = useQuery().get("closed");
     const [dayDate, setDayDate] = useState(match.params.date);
     const [billToClose, setBillToClose] = useState(null);
     const [pago, setPago] = useState(0);
@@ -10,6 +12,7 @@ const SellingDay = ({ match }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [dayTotal, setDayTotal] = useState(0);
+    const [isDayClosed, setIsDayClosed] = useState(query === 'true');
     useEffect(()=>{
         if(bills.length > 0){
             let newTotal = 0;
@@ -28,7 +31,6 @@ const SellingDay = ({ match }) => {
             try {
                 let response = await fetch(`/api/v1/ventas/days/${dayDate}/cuentas`);
                 let { data } = await response.json();
-                console.log(data);
                 setIsLoading(false);
                 setBills(data);
             } catch (error) {
@@ -52,16 +54,31 @@ const SellingDay = ({ match }) => {
             console.error(error);
         }
     };
+    const closeDay = async()=>{
+        if(bills.some(bill=> !bill.isClosed)) return alert("Debe cerrar todas las cuentas del día");
+        try {
+            let response = await fetch(`/api/v1/bussiness/days/${dayDate}/close`,{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({dayTotal})
+            });
+            if(response.ok) history.push("/ventas");
+        } catch (error) {
+            console.error(error);
+        }
+    };
     return (
         <main className="container pt-3">
             <div className="row">
                 <h1 className="mx-auto text-center">Ventas del {dayDate}</h1>
             </div>
-            <div className="row mt-5">
+            {!isDayClosed && <div className="row mt-5">
                 <Link to={`/ventas/days/${dayDate}/cuentas/edit/nueva`} className="mx-auto">
                     <button type="button" className="btn btn-success btn-lg ">Cuenta Nueva</button>
                 </Link>
-            </div>
+            </div>}
             <div className="row mt-5">
                 <h3>Cuentas del Día</h3>
             </div>
@@ -110,9 +127,14 @@ const SellingDay = ({ match }) => {
                 <h2>Total del día: <span className="text-success">${dayTotal}</span></h2>
             </div>
             <div className="row my-5">
-                <button className="btn  btn-warning btn-block">
+                {isDayClosed ? 
+                <Link to="/ventas"className="btn btn-block btn-primary">
+                    Atrás
+                </Link>
+                :<button className="btn  btn-warning btn-block" onClick={closeDay}>
                     Cerrar Día de Venta
                 </button>
+                }
             </div>
             <div className="modal" id="dialogo1">
                 <div className="modal-dialog" role="document">

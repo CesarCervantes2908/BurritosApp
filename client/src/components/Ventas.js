@@ -11,8 +11,8 @@ const Ventas = () => {
     const [error, setError] = useState('');
     const [isLoadingButton, setIsLoadingButton] = useState(false);
     const [errorButton, setErrorButton] = useState('');
+    const [bussinessTotal, setBussinessTotal] = useState(0);
     useEffect(()=>{
-        console.log("Efecto!");
         const fetchDays = async()=>{
             setIsLoading(true);
             try {
@@ -35,6 +35,13 @@ const Ventas = () => {
         let todayDate = parseDate();
         setDate(todayDate);
     }, []);
+    useEffect(()=>{
+        if(sellingDays.length > 0){
+            let newTotal = 0;
+            sellingDays.forEach(sellingDay=> newTotal += sellingDay.totalSold);
+            setBussinessTotal(newTotal);
+        }
+    }, [sellingDays]);
     const createNewDay = async()=>{
         setIsLoadingButton(true);
         try {
@@ -87,17 +94,25 @@ const Ventas = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sellingDays.map(({date, totalSold})=>(
-                                <tr className="table-active" key={date}>
+                                {sellingDays.map(({date :sellingDayDate, totalSold, isClosed})=>(
+                                <tr 
+                                    className={isClosed ? "table-active"
+                                        :date === sellingDayDate ? "table-success" 
+                                        : "table-warning"} 
+                                    key={sellingDayDate}
+                                    >
                                     <th scope="row">
-                                        <Link to={`/ventas/days/${date}`}>{date}</Link>
+                                        <Link to={`/ventas/days/${sellingDayDate}?closed=${isClosed}`}>{sellingDayDate}</Link>
                                     </th>
-                                    <td>${totalSold}</td>
+                                    <td>{isClosed? `$${totalSold}` : "Abierto..."}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                     }
+                </div>
+                <div className="row my-5">
+                    <h2>Ventas Totales: <span className="text-success">${bussinessTotal}</span></h2>
                 </div>
             </>
         }    
