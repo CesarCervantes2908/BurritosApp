@@ -15,17 +15,33 @@ const EditBill = ({ match, history}) => {
                     {(billID === 'nueva' ? 'Crear' : 'Editar') + ' Cuenta'}
                 </h1>
             </div>
+            <div className="row mt-5">
+                <h2>Cuenta Actual</h2>
+            </div>
             <div className="row">
-                <h2 className="mx-auto">Nombre</h2>
+                <h3 className="mt-1">Nombre</h3>
                 <input 
                     type="text" 
-                    className="form-control" 
+                    className="form-control mt-1" 
                     value={bill.billName} 
                     onChange={({ target })=>{
                         setError('');
                         setBill(prevBill=>({...prevBill, billName: target.value}))}}
                     />
             </div>
+            <div className="row my-3">
+                {isLoading ? <h2 className="mx-auto">Cargando...</h2>
+                    :<BillCard
+                            bill={bill}
+                            addProduct={addProduct}
+                            substractProduct={substractProduct}
+                        />
+                    }
+            </div>
+            {redirect ? <Redirect push to={`/ventas/days/${bill.date}/cuentas`} />
+                : <div className="row">
+                    <button className="btn btn-primary btn-block my-5" onClick={handleClick}>Terminar</button>
+                </div>}
             <div className="row mt-5">
                 <h2 className="mx-auto">Menú</h2>
             </div>
@@ -36,17 +52,6 @@ const EditBill = ({ match, history}) => {
                     substractProduct={substractProduct}
                 />
             </div>
-            <div className="row">
-                <h3>Cuenta Actual</h3>
-            </div>
-            {isLoading ? <h2 className="mx-auto">Cargando...</h2>
-            :<div className="row">
-                <BillCard 
-                    bill={bill}
-                    addProduct={addProduct}
-                    substractProduct={substractProduct}
-                    />
-            </div>}
             {error && <h2 className="mxauto text-danger">{error}</h2> }
             {redirect ? <Redirect push to={`/ventas/days/${bill.date}/cuentas`}/> 
             :<div className="row">
