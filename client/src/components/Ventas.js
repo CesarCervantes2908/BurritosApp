@@ -1,39 +1,11 @@
-import React, { useEffect, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom';
+import useCreateNewDay from '../hooks/useCreateNewDay';
 import useFetchDays from '../hooks/useFetchDays';
-import { formatDate, parseDate, sortDates } from '../utils/helperFunction';
+import { formatDate } from '../utils/helperFunction';
 
 const Ventas = () => {
     let [sellingDays, isSellingDayStarted, isLoading, error, bussinessTotal, date] = useFetchDays();
-    const [newDayLink, setNewDayLink] = useState('');
-    const [isLoadingButton, setIsLoadingButton] = useState(false);
-    const [errorButton, setErrorButton] = useState('');   
-    const createNewDay = async()=>{
-        setIsLoadingButton(true);
-        try {
-            let response = await fetch(`/api/v1/bussiness/days/${date}`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            let { data } = await response.json();
-            if(data){
-                setIsLoadingButton(false);
-                setNewDayLink(`/ventas/days/${date}`);
-            }else{
-                throw new Error();
-            };
-        } catch (error) {
-            setIsLoadingButton(false);
-            setErrorButton("Lo sentimos, el día de ventas NO pudo ser creado.");
-            let timeout = setTimeout(()=>{
-                setErrorButton('');
-                clearTimeout(timeout);
-            }, 3000);
-            console.log(error);
-        }
-    };
+    const [createNewDay, newDayLink, isLoadingButton, errorButton] = useCreateNewDay(date);
     return (   
         <main main className = "container pt-4" >
         {newDayLink ? <Redirect push to={`${newDayLink}`}/> : 
