@@ -1,60 +1,12 @@
-import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import useCloseBillLogic from '../hooks/useCloseBillLogic';
+import useFetchBills from '../hooks/useFetchBills';
 import useQuery from '../hooks/useQuery';
 import { formatDate } from '../utils/helperFunction';
 
 const SellingDay = ({ history, match }) => {
-    let query = useQuery().get("closed");
-    const [dayDate, setDayDate] = useState(match.params.date);
-    const [billToClose, setBillToClose] = useState(null);
-    const [pago, setPago] = useState(0);
-    const [cambio, setCambio] = useState(0);
-    const [bills, setBills] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [dayTotal, setDayTotal] = useState(0);
-    const [isDayClosed, setIsDayClosed] = useState(query === 'true');
-    useEffect(()=>{
-        if(bills.length > 0){
-            let newTotal = 0;
-            bills.forEach(bill=> newTotal += bill.billTotal);
-            setDayTotal(newTotal);
-        };
-    },[bills]);
-    useEffect(()=>{
-        if(billToClose){
-            setCambio(pago - billToClose.billTotal);
-        };
-    }, [pago, billToClose]);
-    useEffect(()=>{
-        setIsLoading(true);
-        const fetchBills = async()=>{
-            try {
-                let response = await fetch(`/api/v1/ventas/days/${dayDate}/cuentas`);
-                let { data } = await response.json();
-                setIsLoading(false);
-                setBills(data);
-            } catch (error) {
-                setIsLoading(false);
-                setError('Lo sentimos, ocurrió un error. Recarge la página por favor.');
-                console.error(error);
-            }
-        };
-        fetchBills();
-    }, []);
-    const handleCloseClick = async(id) => {
-        let billToClose = bills.find(bill=> bill._id === id);
-        setBillToClose(billToClose);
-    };
-    const closeBill =  async(date, id)=>{
-        if(cambio < 0) return;
-        try {
-            let response = await fetch(`/api/v1/ventas/days/${date}/cuentas/${id}/edit/close`, { method: 'PUT' });
-            if (response.ok) window.location.reload();
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const [bills, isLoading, error, dayTotal, dayDate] = useFetchBills(match.params.date);
+    const [billToClose, pago, cambio, isDayClosed, setPago, handleCloseClick, closeBill] = useCloseBillLogic(bills);
     const closeDay = async()=>{
         if(bills.some(bill=> !bill.isClosed)) return alert("Debe cerrar todas las cuentas del día");
         try {
@@ -68,7 +20,7 @@ const SellingDay = ({ history, match }) => {
             if(response.ok) history.push("/ventas");
         } catch (error) {
             console.error(error);
-        }
+        };
     };
     return (
         <main className="container pt-3">
@@ -170,8 +122,6 @@ const SellingDay = ({ history, match }) => {
                     </div>
                 </div>
             </div>
-
-
         </main>
     );
 };
