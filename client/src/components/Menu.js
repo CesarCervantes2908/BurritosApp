@@ -29,28 +29,28 @@ const Menu = ({ buttonAble, addProduct, substractProduct }) => {
                 );
             });
             return (
-                <table className="table col-5 mx-3" key={menuName}>
-                    <thead>
-                        <tr className="table-primary">
-                            <th scope="col">Precio</th>
-                            <th scope="col">{menuName}</th>
-                            {buttonAble &&
-                                <th scope="col">Actions</th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tableRows}
-                    </tbody>
-                </table>
+                <div className="col-6">
+                    <table className="table mx-3" key={menuName}>
+                        <thead>
+                            <tr className="table-primary">
+                                <th scope="col">Precio</th>
+                                <th scope="col">{menuName}</th>
+                                {buttonAble &&
+                                    <th scope="col">Actions</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tableRows}
+                        </tbody>
+                    </table>
+                </div>
             );
         });
     };   
     return (
         <>
-            <div className="row">
-                {renderMenus()}
-            </div>
+            {renderMenus()}
         </>
     );
 };

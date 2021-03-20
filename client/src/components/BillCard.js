@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { parseTotal } from '../utils/helperFunction';
+import React from 'react';
 
 const BillCard = ({ bill, addProduct, substractProduct }) => {
     const renderTableBody = ()=>{

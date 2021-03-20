@@ -7,7 +7,7 @@ const Ventas = () => {
     let [sellingDays, isSellingDayStarted, isLoading, error, bussinessTotal, date] = useFetchDays();
     const [createNewDay, newDayLink, isLoadingButton, errorButton] = useCreateNewDay(date);
     return (   
-        <main main className = "container pt-4" >
+        <main  className = "container pt-4" >
         {newDayLink ? <Redirect push to={`${newDayLink}`}/> : 
             <>
                 <div className="row"><h1 className="mx-auto">Ventas</h1></div>
