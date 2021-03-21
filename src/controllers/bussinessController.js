@@ -41,7 +41,7 @@ exports.getDayByDate = async (lookingDate) => {
         return error;
     };
 };
-// //---------------------------------UPDATE CONTROLLERS------------------------------------------
+//------------------------------------UPDATE CONTROLLERS------------------------------------------
 exports.updateDayTotalByDate = async (date, newTotal) => {
     try {
         let updated = await Bussiness.updateOne({"sellingDays.date": date}, {
@@ -88,7 +88,7 @@ exports.updateBussinessTotal = async(newTotal)=>{
         return error.message;
     }
 };
-// //---------------------------------DELETE CONTROLLERS------------------------------------------
+//---------------------------------DELETE CONTROLLERS------------------------------------------
 exports.deleteDayByDate = async (date) => {
     try {
         let { sellingDays } = await Bussiness.findOne({});

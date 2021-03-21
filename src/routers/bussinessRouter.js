@@ -89,7 +89,7 @@ bussinessRouter.put('/total', async(req, res, next)=>{
         res.status(500).json({ error: error.message });
     }
 });
-//-----------------------------------------DELETE ROUTES-----------------------------------------------------//
+//-----------------------------------------DELETE ROuTES-----------------------------------------------------//
 bussinessRouter.delete('/days/:date', async(req, res, next)=>{
     try {
         let remainDays = await bussinessController.deleteDayByDate(req.date);
