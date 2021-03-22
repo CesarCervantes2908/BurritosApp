@@ -22,7 +22,11 @@ toDoListRouter.get("/", async(req, res, next)=>{
     try {
         const data = await toDoListController.getAllLists();
         console.log(data);
-        res.status(200).json({data})
+        if(data[0].date){
+            res.status(200).json({data})
+        }else{
+            throw new Error(data);
+        };
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});    
@@ -32,7 +36,11 @@ toDoListRouter.get("/:id", async(req, res, next)=>{
     try {
         let data = await toDoListController.getListByID(req.id);
         console.log(data);
-        res.status(200).json({data});
+        if(data.date){
+            res.status(200).json({data});
+        }else{
+            throw new Error(data);
+        };
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
