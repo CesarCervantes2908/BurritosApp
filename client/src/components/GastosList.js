@@ -19,10 +19,11 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
             products?.forEach(({total})=> newTotal += total);
             setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, gastosTotal: newTotal})); 
         };
-    }, [currentGastos.products]);
+    }, [currentGastos?.products]);
     useEffect(()=>{
         //Revisa si se cumplieron todas las compras y asigna el finished a la lista de gastos
         const setFinishedList = async()=>{
+            if(!currentGastos) return;
             let { products } = currentGastos;
             if(currentGastos.finished) return;
             if (products?.every(({ checked }) => checked)) {
@@ -51,7 +52,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
 
         };
         setFinishedList();
-    }, [currentGastos.products]);
+    }, [currentGastos?.products]);
     const handleBorrarClick = async(id)=>{
         let newProducts = currentGastos.products.slice();
         newProducts = newProducts.filter(({_id})=> _id !== id);
@@ -147,7 +148,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
             <tfoot>
                 <tr className="table-primary">
                     <td colSpan="3"><h3>Total:</h3></td>
-                    <td className="text-danger" colSpan="2">${currentGastos.gastosTotal}</td>
+                    <td className="text-danger" colSpan="2">${currentGastos?.gastosTotal || 0}</td>
                 </tr>
             </tfoot>
         </table>
