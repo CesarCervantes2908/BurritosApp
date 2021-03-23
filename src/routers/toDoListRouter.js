@@ -22,7 +22,7 @@ toDoListRouter.get("/", async(req, res, next)=>{
     try {
         const data = await toDoListController.getAllLists();
         console.log(data);
-        if(data[0].date){
+        if(data.length !== undefined){
             res.status(200).json({data})
         }else{
             throw new Error(data);
