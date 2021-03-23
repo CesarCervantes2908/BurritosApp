@@ -1,25 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CreateGastosButton from './CreateGastosButton';
 import GastosForm from './GastosForm';
 import GastosList from './GastosList';
 
 const Gastos = () => {
-    const [gastosLists, setGastosLists] = useState([{
-        date: '22-3-2021',
-        products: [{
-            name: 'Jitomate',
-            quantity: 10,
-            pricePerQuantity: 20,
-            total: 0,
-            checked: false
-        }],
-        gastosTotal: 0,
-        finished: false
-    }]);
+    const [gastosLists, setGastosLists] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [currentGastos, setCurrentGastos] = useState(gastosLists[0]);
+    const [currentGastos, setCurrentGastos] = useState(null);
+    useEffect(()=>{
+        const fetchGastos = async()=>{
+            setIsLoading(true);
+            try {
+                let response = await fetch("/api/v1/gastos");
+                let { data } = await response.json();
+                if(data.length !== undefined){
+                    setGastosLists(data);
+                    setIsLoading(false);
+                }else{
+                    throw new Error();
+                }
+            } catch (error) {
+                setError("Hubo un problema. Inténtelo de nuevo por favor");
+                setIsLoading(false);
+            }
+        };
+        fetchGastos();
+    },[]);
+    useEffect(()=>{
+        if(gastosLists.length > 0){
+            gastosLists.forEach(list=> {
+                if(!list.finished){
+                    return setCurrentGastos(list);
+                };
+            });
+        };
+    },[gastosLists]);
     return (
         <main className="container p-5">
             <div className="row">
@@ -39,7 +56,7 @@ const Gastos = () => {
                                 currentGastos={currentGastos}
                             />
                             : <div className="col-4">
-                                {!currentGastos?.finishedList &&
+                                {!currentGastos?.finished &&
                                     <button
                                         className="btn btn-primary btn-block"
                                         onClick={() => setEditMode(true)}
@@ -48,7 +65,7 @@ const Gastos = () => {
                                     </button>
                                 }
                                 <CreateGastosButton
-                                    className={"btn btn-block btn-" + (currentGastos?.finishedList ? "success" : "warning")}
+                                    className={"btn btn-block btn-" + (currentGastos?.finished ? "success" : "warning")}
                                     setCurrentGastos={setCurrentGastos}
                                     setGastosLists={setGastosLists}
                                     currentGastos={currentGastos}
@@ -79,14 +96,14 @@ const Gastos = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="table-hover">
-                                    {gastosLists.map((list, index) => {
+                                    {gastosLists?.map(list => {
                                         return (
-                                            <tr className={list.finished ? "" : "table-success"} 
-                                                key={index}
+                                            <tr className={list.finished ? " " : "table-success"}
+                                                key={list._id}
                                                 onClick={()=>setCurrentGastos(list)}
                                                 >
                                                 <th>{list.date}</th>
-                                                <td>${list.gastosTotal}</td>
+                                                <td>{list.finished ? `$${list.gastosTotal}` : "Abierta..."}</td>
                                             </tr>
                                         );
                                     })}

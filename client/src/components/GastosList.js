@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 const GastosList = ({ currentGastos, setCurrentGastos}) => {
     useEffect(() => {
-        if(currentGastos?.products.length > 0){
+        //Pone los totales para cada uno de los productos según la cantidad y el precio por cantidad
+        if(currentGastos?.products?.length > 0){
             let newProducts = currentGastos.products.slice();
             newProducts.forEach(producto=>{
                 producto.total = producto.quantity * producto.pricePerQuantity;
@@ -11,30 +12,97 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
         }
     }, []);
     useEffect(() => {
-        let newTotal = 0;
-        let {products} = currentGastos;
-        products.forEach(({total})=> newTotal += total);
-        setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, gastosTotal: newTotal})); 
-    }, [currentGastos.products]);
-    useEffect(()=>{
-        let {products} = currentGastos;
-        if(products.every(({checked})=> checked)){
-            setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, finished: true}));
+        //Pone el total a la cuenta en total (de todos los productos)
+        if(currentGastos){
+            let newTotal = 0;
+            let {products} = currentGastos;
+            products?.forEach(({total})=> newTotal += total);
+            setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, gastosTotal: newTotal})); 
         };
     }, [currentGastos.products]);
-    const handleBorrarClick = (id)=>{
-        setCurrentGastos(prevCurrentGastos=>{
-            let newProducts = prevCurrentGastos.products.slice();
-            newProducts = newProducts.filter((_, _id)=> _id !== id);
-            return {...prevCurrentGastos, products: newProducts}
-        });
+    useEffect(()=>{
+        //Revisa si se cumplieron todas las compras y asigna el finished a la lista de gastos
+        const setFinishedList = async()=>{
+            let { products } = currentGastos;
+            if(currentGastos.finished) return;
+            if (products?.every(({ checked }) => checked)) {
+                try {
+                    let response = await fetch(`/api/v1/gastos/${currentGastos._id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            list: {
+                                finished: true 
+                            },
+                        }),
+                    });
+                    let { data } = await response.json();
+                    if(data._id){
+                        setCurrentGastos(data);
+                    }else{
+                        throw new Error();
+                    };
+                } catch (error) {
+                  return("No se pudo actualizar. Inténtelo de nuevo");  
+                };
+            };
+
+        };
+        setFinishedList();
+    }, [currentGastos.products]);
+    const handleBorrarClick = async(id)=>{
+        let newProducts = currentGastos.products.slice();
+        newProducts = newProducts.filter(({_id})=> _id !== id);
+        try {
+            let response = await fetch(`/api/v1/gastos/${currentGastos._id}`,{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({list: {products: newProducts}})
+            });
+            let { data } = await response.json();
+            console.log(data);
+            if(data._id){
+                setCurrentGastos(data);
+            } else{
+                throw new Error();
+            };
+        } catch (error) {
+            return alert("No se pudo borrar. Intente de nuevo");
+        }
     };
-    const handleListoClick = (id)=>{
-        setCurrentGastos(prevCurrentGastos => {
-            let newProducts = prevCurrentGastos.products.slice();
-            newProducts[id].checked = true;
-            return { ...prevCurrentGastos, products: newProducts }
+    const handleListoClick = async(id)=>{
+        let newProducts = currentGastos.products.slice();
+        newProducts.forEach(product=>{
+            if(product._id === id){
+                product.checked = true;
+            };
         });
+        try {
+            let response = await fetch(`/api/v1/gastos/${currentGastos._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ list: { 
+                    products: newProducts, 
+                    gastosTotal: currentGastos.gastosTotal
+                    }
+                })
+            });
+            let { data } = await response.json();
+            console.log(data);
+            if (data._id) {
+                setCurrentGastos(data);
+            } else {
+                throw new Error();
+            };
+        } catch (error) {
+            return alert("No se pudo completar. Intente de nuevo");
+        }
     };
     return (
         <table className="table col-8">
@@ -48,7 +116,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
                 </tr>
             </thead>
             <tbody>
-                {currentGastos.products.map((producto, index)=>{
+                {currentGastos?.products?.map(producto=>{
                     return (
                         <tr className="table-secondary" key={producto.name}>
                             <td>{producto.quantity}</td>
@@ -60,13 +128,13 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
                                 :<>
                                     <button
                                         className="btn btn-sm btn-success mr-2"
-                                        onClick={() => { handleListoClick(index) }}
+                                        onClick={() => { handleListoClick(producto._id) }}
                                     >
                                         Listo
                                     </button>
                                     <button
                                         className="btn btn-sm btn-danger"
-                                        onClick={() => { handleBorrarClick(index) }}
+                                        onClick={() => { handleBorrarClick(producto._id) }}
                                     >
                                         Borrar
                                     </button>
