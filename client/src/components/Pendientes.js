@@ -27,36 +27,7 @@ const Pendientes = () => {
         fetchLists();
     }, []);
     useEffect(()=>{
-        const updateList = async()=>{
-            let flag = true;
-            if(currentList?.finishedList) return;
-            if (currentList?.toDos.length > 0) {
-                currentList?.toDos.forEach(({checked}) => {
-                    if(!checked) flag = false;
-                });
-                if(flag){
-                    try {
-                        let response = await fetch(`/api/v1/pendientes/${currentList?._id}`,{
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({list: {finishedList: true}})
-                        });
-                        let {data} = await response.json();
-                        if(data._id){
-                            setCurrentList(data);
-                        }else{
-                            throw new Error();
-                        };
-                    } catch (error) {
-                        alert('No se puedo actualizar la cuenta, inténtelo de nuevo.');
-                    };
-                };
-        };};
-        updateList();
-    }, [currentList?.toDos]);
-    useEffect(()=>{
+        //Asigna la lista no terminada al editor
         if(lists.length > 0){
             lists.forEach(list=>{
                 if(!list.finishedList) return setCurrentList(list);

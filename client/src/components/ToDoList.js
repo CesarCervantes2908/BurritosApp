@@ -1,6 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const ToDoList = ({currentList, setCurrentList}) => {
+    useEffect(() => {
+        //cierra la lista en el servidor una vez que se cumplieron todos los pendientes
+        const updateList = async () => {
+            if (currentList && !currentList?.finishedList && currentList?.toDos.length > 0) {
+                if (currentList.toDos.every(({checked})=> checked)) {
+                    try {
+                        let response = await fetch(`/api/v1/pendientes/${currentList?._id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ list: { finishedList: true } })
+                        });
+                        let { data } = await response.json();
+                        if (data._id) {
+                            setCurrentList(data);
+                        } else {
+                            throw new Error();
+                        };
+                    } catch (error) {
+                        alert('No se puedo actualizar la cuenta, inténtelo de nuevo.');
+                    };
+                };
+            };
+        };
+        updateList();
+    }, [currentList?.toDos]);
     const handleHechoClick = async(id)=>{
         let newToDos = currentList?.toDos.slice();
         newToDos.forEach(toDo => {

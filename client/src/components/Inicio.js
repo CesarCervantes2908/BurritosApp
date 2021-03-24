@@ -13,15 +13,16 @@ const Inicio = () => {
         const fetchGastos = async()=>{
             setLoadingGastos(true);
             try {
-              let response = await fetch('/api/v1/gastos?filter=active');
-              let { data } = await response.json();
-              if(data._id){
-                setLoadingGastos(false);  
-                setGastos(data);
-              }else{
-                throw new Error();
-              };
+                let response = await fetch('/api/v1/gastos?filter=active');
+                let { data } = await response.json();
+                if (data === null || data._id){
+                    setLoadingGastos(false);  
+                    setGastos(data);
+                }else{
+                    throw new Error();
+                };
             } catch (error) {
+                console.log(error);
                 setLoadingGastos(false);
                 setErrorGastos("Ocurrió un Error. Por favor recargue la página")
             };
@@ -34,13 +35,15 @@ const Inicio = () => {
             try {
                 let response = await fetch('/api/v1/pendientes?filter=active');
                 let { data } = await response.json();
-                if (data._id) {
+                console.log(data);
+                if (data === null || data._id) {
                     setLoadingPendientes(false);
                     setPendientes(data);
                 } else {
                     throw new Error();
                 };
             } catch (error) {
+                console.log(error);
                 setLoadingPendientes(false);
                 setErrorPendientes("Ocurrió un Error. Por favor recargue la página")
             };
