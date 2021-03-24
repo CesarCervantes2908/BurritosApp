@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { formatDate } from '../utils/helperFunction';
 import CreateGastosButton from './CreateGastosButton';
 import GastosForm from './GastosForm';
 import GastosList from './GastosList';
@@ -102,7 +103,7 @@ const Gastos = () => {
                                                 key={list._id}
                                                 onClick={()=>setCurrentGastos(list)}
                                                 >
-                                                <th>{list.date}</th>
+                                                <th>{formatDate(list.date)}</th>
                                                 <td>{list.finished ? `$${list.gastosTotal}` : "Abierta..."}</td>
                                             </tr>
                                         );

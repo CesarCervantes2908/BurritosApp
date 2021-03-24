@@ -1,54 +1,29 @@
 import React, { useEffect, useState } from 'react'
+import useFetchActiveGastos from '../hooks/useFetchActiveGastos';
+import useFetchActivePendientes from '../hooks/useFetchActivePendientes';
 import GastosList from './GastosList';
 import ToDoList from './ToDoList';
 
 const Inicio = () => {
-    const [pendientes, setPendientes] = useState(null);
-    const [gastos, setGastos] = useState(null);
-    const [loadingGastos, setLoadingGastos] = useState(false);
-    const [errorGastos, setErrorGastos] = useState('');
-    const [loadingPendientes, setLoadingPendientes] = useState(false);
-    const [errorPendientes, setErrorPendientes] = useState('');
+    const [bussinessTotal, setBussinessTotal] = useState(0);
+    const [gastos, errorGastos, loadingGastos, setGastos] = useFetchActiveGastos();
+    const [pendientes, errorPendientes, loadingPendientes, setPendientes] = useFetchActivePendientes();
     useEffect(()=>{
-        const fetchGastos = async()=>{
-            setLoadingGastos(true);
+        //Obtiene el total 
+        const fetchBussiness = async()=>{
             try {
-                let response = await fetch('/api/v1/gastos?filter=active');
+                let response = await fetch('/api/v1/bussiness');
                 let { data } = await response.json();
-                if (data === null || data._id){
-                    setLoadingGastos(false);  
-                    setGastos(data);
+                if(data._id){
+                    setBussinessTotal(data.totalAmount);
                 }else{
                     throw new Error();
                 };
             } catch (error) {
-                console.log(error);
-                setLoadingGastos(false);
-                setErrorGastos("Ocurrió un Error. Por favor recargue la página")
+              return alert('Hubo un Error. Recarge la página');  
             };
         };
-        fetchGastos();
-    }, []);
-    useEffect(()=>{
-        const fetchPendientes = async()=>{
-            setLoadingPendientes(true);
-            try {
-                let response = await fetch('/api/v1/pendientes?filter=active');
-                let { data } = await response.json();
-                console.log(data);
-                if (data === null || data._id) {
-                    setLoadingPendientes(false);
-                    setPendientes(data);
-                } else {
-                    throw new Error();
-                };
-            } catch (error) {
-                console.log(error);
-                setLoadingPendientes(false);
-                setErrorPendientes("Ocurrió un Error. Por favor recargue la página")
-            };
-        };
-        fetchPendientes();
+        fetchBussiness();
     }, []);
     return (
         <main className="container p-5">
@@ -77,6 +52,15 @@ const Inicio = () => {
             <div className="row mt-5">
                 <div className="col">
                     <h2>Balance</h2>
+                </div>
+            </div>
+            <div className="row mt-5">
+                <div className="col">
+                    <h2>
+                        Total: <span className={`text-${bussinessTotal < 0 ? "danger": "success"}`}>
+                            ${bussinessTotal}
+                        </span>
+                    </h2>
                 </div>
             </div>
         </main>
