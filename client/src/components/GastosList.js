@@ -23,33 +23,32 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
     useEffect(()=>{
         //Revisa si se cumplieron todas las compras y asigna el finished a la lista de gastos
         const setFinishedList = async()=>{
-            if(!currentGastos) return;
-            let { products } = currentGastos;
-            if(currentGastos.finished) return;
-            if (products?.every(({ checked }) => checked)) {
-                try {
-                    let response = await fetch(`/api/v1/gastos/${currentGastos._id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            list: {
-                                finished: true 
+            if(currentGastos && !currentGastos.finished && currentGastos.products.length > 0){
+                let { products } = currentGastos;
+                if (products?.every(({ checked }) => checked)) {
+                    try {
+                        let response = await fetch(`/api/v1/gastos/${currentGastos._id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
                             },
-                        }),
-                    });
-                    let { data } = await response.json();
-                    if(data._id){
-                        setCurrentGastos(data);
-                    }else{
-                        throw new Error();
+                            body: JSON.stringify({
+                                list: {
+                                    finished: true 
+                                },
+                            }),
+                        });
+                        let { data } = await response.json();
+                        if(data._id){
+                            setCurrentGastos(data);
+                        }else{
+                            throw new Error();
+                        };
+                    } catch (error) {
+                      return("No se pudo actualizar. Inténtelo de nuevo");  
                     };
-                } catch (error) {
-                  return("No se pudo actualizar. Inténtelo de nuevo");  
                 };
             };
-
         };
         setFinishedList();
     }, [currentGastos?.products]);

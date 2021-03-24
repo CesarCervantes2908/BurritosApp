@@ -27,6 +27,14 @@ exports.getListByID = async (id) => {
         return error.message;
     };
 };
+exports.getActiveList = async () =>{
+    try {
+        let list = await GastosList.findOne({ finished: false });
+        return list;
+    } catch (error) {
+        return error.message;
+    };
+};
 //---------------------------------UPDATE CONTROLLERS------------------------------------------
 exports.updateListByID = async (id, newList) => {
     try {

@@ -20,12 +20,23 @@ toDoListRouter.post("/", async(req, res, next)=>{
 //-------------------------------------------GET ROUTES------------------------------------------------------//
 toDoListRouter.get("/", async(req, res, next)=>{
     try {
-        const data = await toDoListController.getAllLists();
-        console.log(data);
-        if(data.length !== undefined){
-            res.status(200).json({data})
+        let data;
+        if (req.query.filter === 'active'){
+            data = await toDoListController.getActiveList();
+            console.log(data);
+            if (data === null || data._id) {
+                res.status(200).json({ data });
+            } else {
+                throw new Error(data);
+            };
         }else{
-            throw new Error(data);
+            data = await toDoListController.getAllLists();
+            console.log(data);
+            if(data.length !== undefined){
+                res.status(200).json({data})
+            }else{
+                throw new Error(data);
+            };
         };
     } catch (error) {
         console.log(error);

@@ -20,12 +20,23 @@ gastosRouter.post("/", async (req, res, next) => {
 //-------------------------------------------GET ROUTES------------------------------------------------------//
 gastosRouter.get("/", async (req, res, next) => {
     try {
-        const data = await gastosController.getAllLists();
-        console.log(data);
-        if (data.length !== undefined) {
-            res.status(200).json({ data })
-        } else {
-            throw new Error(data);
+        let data;
+        if(req.query.filter === 'active'){
+            data = await gastosController.getActiveList();
+            console.log(data);
+            if(data === null || data._id){
+                res.status(200).json({ data });
+            }else{
+                throw new Error(data);
+            };
+        }else{
+            data = await gastosController.getAllLists();
+            console.log(data);
+            if (data.length !== undefined) {
+                res.status(200).json({ data })
+            } else {
+                throw new Error(data);
+            };
         };
     } catch (error) {
         console.log(error);
