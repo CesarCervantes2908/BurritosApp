@@ -7,13 +7,12 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
     const [handleListoClick, handleBorrarClick] = useHandleClicks(currentGastos, setCurrentGastos);
     useEffect(() => {
         //Pone el total a la cuenta completa (de todos los productos)
-        if(currentGastos){
+        if(currentGastos.products){
             let newTotal = 0;
-            let {products} = currentGastos;
-            products?.forEach(({total})=> newTotal += total);
+            currentGastos?.products?.forEach(({total})=> newTotal += total);
             setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, gastosTotal: newTotal})); 
         };
-    }, [currentGastos, setCurrentGastos ,currentGastos?.products]);
+    }, [ setCurrentGastos ,currentGastos?.products]);
     useEffect(()=>{
         //Revisa si se cumplieron todas las compras y asigna el finished a la lista de gastos
         const setFinishedList = async()=>{
