@@ -7,7 +7,7 @@ const BussinessProvider = ({ children }) => {
     const [date, setDate] = useState('19-2-2021');
     const [bussinessTotal, setBussinessTotal] = useState(0);
     useEffect(()=>{
-        // setDate(parseDate());
+        setDate(parseDate());
     },[]);
     useEffect(() => {
         //Obtiene el total 

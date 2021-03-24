@@ -27,7 +27,7 @@ const ToDoList = ({currentList, setCurrentList}) => {
             };
         };
         updateList();
-    }, [currentList?.toDos]);
+    }, [currentList, currentList?.toDos, setCurrentList]);
     const handleHechoClick = async(id)=>{
         let newToDos = currentList?.toDos.slice();
         newToDos.forEach(toDo => {

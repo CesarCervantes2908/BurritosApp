@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom';
+import {  Redirect } from 'react-router-dom';
 import useFetchBill from '../hooks/useFetchBill';
-import { parseTotal } from '../utils/helperFunction';
 import BillCard from './BillCard';
 import Menu from './Menu';
 

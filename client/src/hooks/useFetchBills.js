@@ -6,7 +6,7 @@ const useFetchBills = (initialDate) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [dayTotal, setDayTotal] = useState(0);
-    const [dayDate, setDayDate] = useState(initialDate);
+    const [dayDate, ] = useState(initialDate);
     useEffect(() => {
         if (bills.length > 0) {
             let newTotal = 0;
@@ -29,7 +29,7 @@ const useFetchBills = (initialDate) => {
             }
         };
         fetchBills();
-    }, []);
+    }, [dayDate]);
     return [bills, isLoading, error, dayTotal, dayDate];
 }
 

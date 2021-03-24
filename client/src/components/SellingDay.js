@@ -8,7 +8,7 @@ import { formatDate } from '../utils/helperFunction';
 const SellingDay = ({ history, match }) => {
     const [bills, isLoading, error, dayTotal, dayDate] = useFetchBills(match.params.date);
     const [billToClose, pago, cambio, isDayClosed, setPago, handleCloseClick, closeBill] = useCloseBillLogic(bills);
-    const [_, bussinessTotal, handleTotalChange] = useContext(BussinessContext);
+    const [ , bussinessTotal, handleTotalChange] = useContext(BussinessContext);
     const closeDay = async()=>{
         if(bills.some(bill=> !bill.isClosed)) return alert("Debe cerrar todas las cuentas del día");
         try {

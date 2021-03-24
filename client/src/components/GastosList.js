@@ -13,7 +13,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
             products?.forEach(({total})=> newTotal += total);
             setCurrentGastos(prevCurrentGastos=>({...prevCurrentGastos, gastosTotal: newTotal})); 
         };
-    }, [currentGastos?.products]);
+    }, [currentGastos, setCurrentGastos ,currentGastos?.products]);
     useEffect(()=>{
         //Revisa si se cumplieron todas las compras y asigna el finished a la lista de gastos
         const setFinishedList = async()=>{
@@ -47,7 +47,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
             };
         };
         setFinishedList();
-    }, [currentGastos?.products]);
+    }, [bussinessTotal, currentGastos, setCurrentGastos, handleTotalChange ,currentGastos?.products]);
     
     return (
         <table className="table col-8">

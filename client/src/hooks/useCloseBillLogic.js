@@ -7,7 +7,7 @@ const useCloseBillLogic = (bills) => {
     const [billToClose, setBillToClose] = useState(null);
     const [pago, setPago] = useState(0);
     const [cambio, setCambio] = useState(0);
-    const [isDayClosed, setIsDayClosed] = useState(query === 'true');
+    const [isDayClosed, ] = useState(query === 'true');
     useEffect(() => {
         if (billToClose) {
             setCambio(pago - billToClose.billTotal);

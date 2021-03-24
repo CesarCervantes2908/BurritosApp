@@ -5,7 +5,7 @@ import { parseTotal } from "../utils/helperFunction";
 const useFetchBill = ({params}, history) => {
     const [redirect, setRedirect] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [billID, setBillID] = useState(params.id);
+    const [billID, ] = useState(params.id);
     const [error, setError] = useState('');
     const [bill, setBill] = useState({
         date: params.date,
@@ -38,7 +38,7 @@ const useFetchBill = ({params}, history) => {
             }
         };
         if (billID !== 'nueva') fetchBill();
-    }, []);
+    }, [billID, params.date]);
     const addProduct = ({ price, name }) => {
         setError('');
         setBill(prevBill => {

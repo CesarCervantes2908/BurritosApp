@@ -1,5 +1,5 @@
 import { BussinessContext } from "../store/BussinessProvider";
-import { parseDate, sortDates } from "../utils/helperFunction";
+import { sortDates } from "../utils/helperFunction";
 
 const { useEffect, useState, useContext } = require("react");
 
@@ -28,7 +28,7 @@ const useFetchDays = () => {
     }, []);
     useEffect(() => {
         if (sellingDays.some(sellingDay => sellingDay.date === date)) setIsSellingDayStarted(true);
-    }, [sellingDays]);
+    }, [sellingDays, date]);
     useEffect(() => {
         if (sellingDays.length > 0) {
             let newTotal = 0;

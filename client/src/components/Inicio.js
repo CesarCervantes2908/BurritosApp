@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import useFetchActiveGastos from '../hooks/useFetchActiveGastos';
 import useFetchActivePendientes from '../hooks/useFetchActivePendientes';
 import { BussinessContext } from '../store/BussinessProvider';
@@ -6,7 +6,7 @@ import GastosList from './GastosList';
 import ToDoList from './ToDoList';
 
 const Inicio = () => {
-    const [date, bussinessTotal, handleTotalChange] = useContext(BussinessContext);
+    const [ , bussinessTotal, ] = useContext(BussinessContext);
     const [gastos, errorGastos, loadingGastos, setGastos] = useFetchActiveGastos();
     const [pendientes, errorPendientes, loadingPendientes, setPendientes] = useFetchActivePendientes();
     
