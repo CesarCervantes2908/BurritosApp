@@ -4,10 +4,10 @@ import { parseDate } from "../utils/helperFunction";
 const BussinessContext = createContext();
 
 const BussinessProvider = ({ children }) => {
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState('19-2-2021');
     const [bussinessTotal, setBussinessTotal] = useState(0);
     useEffect(()=>{
-        setDate(parseDate());
+        // setDate(parseDate());
     },[]);
     useEffect(() => {
         //Obtiene el total 
@@ -38,11 +38,12 @@ const BussinessProvider = ({ children }) => {
             let { data } = await response.json();
             if(data._id){
                 setBussinessTotal(data.totalAmount);
+                return {ok: true};
             }else{
                 throw new Error();
             }
         } catch (error) {
-            return alert("No se pudo actualizar.Intente de nuevo");
+            return {ok: false};
         }
     };
     return (

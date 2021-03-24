@@ -1,12 +1,14 @@
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import useCloseBillLogic from '../hooks/useCloseBillLogic';
 import useFetchBills from '../hooks/useFetchBills';
-import useQuery from '../hooks/useQuery';
+import { BussinessContext } from '../store/BussinessProvider';
 import { formatDate } from '../utils/helperFunction';
 
 const SellingDay = ({ history, match }) => {
     const [bills, isLoading, error, dayTotal, dayDate] = useFetchBills(match.params.date);
     const [billToClose, pago, cambio, isDayClosed, setPago, handleCloseClick, closeBill] = useCloseBillLogic(bills);
+    const [_, bussinessTotal, handleTotalChange] = useContext(BussinessContext);
     const closeDay = async()=>{
         if(bills.some(bill=> !bill.isClosed)) return alert("Debe cerrar todas las cuentas del día");
         try {
@@ -17,9 +19,20 @@ const SellingDay = ({ history, match }) => {
                 },
                 body: JSON.stringify({dayTotal})
             });
-            if(response.ok) history.push("/ventas");
+            if(response.ok) {
+                let newTotal =  bussinessTotal + dayTotal;
+                let respuesta = await handleTotalChange(newTotal);
+                console.log(respuesta);
+                if(respuesta.ok){
+                    history.push("/ventas")
+                }else{
+                    throw new Error();
+                }
+            }else{
+                throw new Error();
+            };
         } catch (error) {
-            console.error(error);
+            return alert("No se pudo cerrar el día. Inténtelo de nuevo");
         };
     };
     return (

@@ -4,7 +4,7 @@ import useFetchDays from '../hooks/useFetchDays';
 import { formatDate } from '../utils/helperFunction';
 
 const Ventas = () => {
-    let [sellingDays, isSellingDayStarted, isLoading, error, bussinessTotal, date] = useFetchDays();
+    let [sellingDays, isSellingDayStarted, isLoading, error, totalVentas, date] = useFetchDays();
     const [createNewDay, newDayLink, isLoadingButton, errorButton] = useCreateNewDay(date);
     return (   
         <main  className = "container pt-4" >
@@ -52,7 +52,7 @@ const Ventas = () => {
                     }
                 </div>
                 <div className="row my-5">
-                    <h2>Ventas Totales: <span className="text-success">${bussinessTotal}</span></h2>
+                    <h2>Ventas Totales: <span className="text-success">${totalVentas}</span></h2>
                 </div>
             </>
         }    

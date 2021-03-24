@@ -11,7 +11,6 @@ const useFetchActivePendientes = () => {
             try {
                 let response = await fetch('/api/v1/pendientes?filter=active');
                 let { data } = await response.json();
-                console.log(data);
                 if (data === null || data._id) {
                     setLoadingPendientes(false);
                     setPendientes(data);

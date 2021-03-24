@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { BussinessContext } from '../store/BussinessProvider';
 
 const CreateListButton = ({className, currentList, setLists, setCurrentList}) => {
+    const [date, , ] = useContext(BussinessContext);
     const handleClick = async()=>{
         if(currentList?.toDos.some(({checked})=> !checked)) {
            return window.confirm("No puede iniciar una cuenta nueva si no ha terminado los de la anterior");
         };
         let newList= {
-            date: '19-Mar-2021',
+            date,
             toDos: [],
             finishedList: false
         };

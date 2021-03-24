@@ -29,7 +29,7 @@ const Menu = ({ buttonAble, addProduct, substractProduct }) => {
                 );
             });
             return (
-                <div className="col-6">
+                <div className="col-6" key={menuName}>
                     <table className="table mx-3" key={menuName}>
                         <thead>
                             <tr className="table-primary">

@@ -1,10 +1,14 @@
+import { useContext } from 'react';
+import { BussinessContext } from '../store/BussinessProvider';
+
 const CreateGastosButton = ({className, currentGastos, setGastosLists, setCurrentGastos}) => {
+    const[date, , ] = useContext(BussinessContext);
     const handleClick = async()=>{
         if (currentGastos?.products.some(({ checked }) => !checked)) {
             return window.confirm("No puede iniciar una lista nueva si no ha terminado la anterior");
         };
         let newGastos = {
-            date: '22-3-2021',
+            date,
             products: [],
             finished: false,
             gastosTotal: 0
