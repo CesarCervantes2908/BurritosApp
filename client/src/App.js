@@ -7,20 +7,23 @@ import Pendientes from './components/Pendientes';
 import Ventas from './components/Ventas';
 import SellingDay from './components/SellingDay';
 import EditBill from './components/EditBill';
+import BussinessProvider from './store/BussinessProvider';
 
 const App = () => {
   return (
-    <Router>
-      <NavBar></NavBar>
-        <Switch>
-          <Route path="/ventas/days/:date/cuentas/edit/:id" component={EditBill} />
-          <Route path="/ventas/days/:date" component={SellingDay} />
-          <Route path="/ventas" component={Ventas} />
-          <Route path="/gastos" component={Gastos} />
-          <Route path="/pendientes" component={Pendientes} />
-          <Route path="/" component={Inicio} />
-        </Switch>
-    </Router>
+    <BussinessProvider>
+      <Router>
+        <NavBar></NavBar>
+          <Switch>
+              <Route path="/ventas/days/:date/cuentas/edit/:id" component={EditBill} />
+              <Route path="/ventas/days/:date" component={SellingDay} />
+              <Route path="/ventas" component={Ventas} />
+              <Route path="/gastos" component={Gastos} />
+              <Route path="/pendientes" component={Pendientes} />
+              <Route path="/" component={Inicio} />
+          </Switch>
+      </Router>
+    </BussinessProvider>
   )
 }
 

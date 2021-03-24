@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useFetchActiveGastos from '../hooks/useFetchActiveGastos';
 import useFetchActivePendientes from '../hooks/useFetchActivePendientes';
+import { BussinessContext } from '../store/BussinessProvider';
 import GastosList from './GastosList';
 import ToDoList from './ToDoList';
 
 const Inicio = () => {
-    const [bussinessTotal, setBussinessTotal] = useState(0);
+    const [date, bussinessTotal, handleTotalChange] = useContext(BussinessContext);
     const [gastos, errorGastos, loadingGastos, setGastos] = useFetchActiveGastos();
     const [pendientes, errorPendientes, loadingPendientes, setPendientes] = useFetchActivePendientes();
-    useEffect(()=>{
-        //Obtiene el total 
-        const fetchBussiness = async()=>{
-            try {
-                let response = await fetch('/api/v1/bussiness');
-                let { data } = await response.json();
-                if(data._id){
-                    setBussinessTotal(data.totalAmount);
-                }else{
-                    throw new Error();
-                };
-            } catch (error) {
-              return alert('Hubo un Error. Recarge la página');  
-            };
-        };
-        fetchBussiness();
-    }, []);
+    
     return (
         <main className="container p-5">
             <div className="row">
