@@ -8,6 +8,13 @@ const app = express();
 const PORT = process.env.PORT;
 connectDB();
 
+//------------------------------------MIDDLEWARES-----------------------------------------
+app.use(express.json());
+
+//--------------------------------------ROUTERS-------------------------------------------
+app.use('/api/v1', APIRouter);
+
+
 //---------------------------------------SETUP--------------------------------------------
 if(process.env.NODE_ENV === 'development'){
     console.log("Development Enviroment");
@@ -16,14 +23,10 @@ if(process.env.NODE_ENV === 'development'){
 };
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '/client/build')));
-}
-//------------------------------------MIDDLEWARES-----------------------------------------
-app.use(express.json());
-
-//--------------------------------------ROUTERS-------------------------------------------
-app.use('/api/v1', APIRouter);
-
-
+    app.get('/', (req, res, next)=>{
+        res.sendFile(path(__dirname, 'client', 'build', 'index.html'));
+    });
+};
 
 app.listen(PORT, ()=>{
     console.log(`Server Listening on Port: ${PORT}`);
