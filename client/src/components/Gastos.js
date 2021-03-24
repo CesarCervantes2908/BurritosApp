@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { formatDate } from '../utils/helperFunction';
+import { formatDate, sortDates } from '../utils/helperFunction';
 import CreateGastosButton from './CreateGastosButton';
 import GastosForm from './GastosForm';
 import GastosList from './GastosList';
@@ -17,7 +17,8 @@ const Gastos = () => {
                 let response = await fetch("/api/v1/gastos");
                 let { data } = await response.json();
                 if(data.length !== undefined){
-                    setGastosLists(data);
+                    let sortData = sortDates(data.slice());
+                    setGastosLists(sortData);
                     setIsLoading(false);
                 }else{
                     throw new Error();

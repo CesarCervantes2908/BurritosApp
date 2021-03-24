@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { sortDates, formatDate } from '../utils/helperFunction';
 import CreateListButton from './CreateListButton';
 import ToDoForm from './ToDoForm';
 import ToDoList from './ToDoList';
@@ -17,7 +18,8 @@ const Pendientes = () => {
                 let response = await fetch(`/api/v1/pendientes/`);
                 let {data, error} = await response.json();
                 if(error) throw new Error(error);
-                setLists(data);
+                let sortData = sortDates(data.slice());
+                setLists(sortData);
                 setIsLoading(false);
             } catch (error) {
                 setIsLoading(false);
@@ -95,7 +97,7 @@ const Pendientes = () => {
                                 {lists.map(({date, finishedList}, index)=>{
                                     return(
                                         <tr onClick={()=>{handleRowClick(index)}} key={index}>
-                                            <th className={finishedList ? "": "table-success"}>{date}</th>
+                                            <th className={finishedList ? "": "table-success"}>{formatDate(date)}</th>
                                         </tr>
                                     );
                                 })}
