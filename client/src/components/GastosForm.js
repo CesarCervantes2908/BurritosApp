@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const GastosForm = ({ setEditMode, setCurrentGastos }) => {
+const GastosForm = ({ setEditMode, setCurrentGastos, currentGastos }) => {
     const [name, setName] = useState('');
     const [pricePerQuantity, setPricePerQuantity] = useState(0);
     const [total, setTotal] = useState(0);
@@ -10,18 +10,37 @@ const GastosForm = ({ setEditMode, setCurrentGastos }) => {
             setTotal(pricePerQuantity * quantity);
         };
     },[pricePerQuantity, quantity]);
-    const handleSubmit = (e)=>{
+    const handleSubmit = async(e)=>{
         e.preventDefault();
         if(!name.trim() || !pricePerQuantity || !total || !quantity) return;
-        setCurrentGastos(prevCurrentGastos=>{
-            let newProducts = prevCurrentGastos.products.slice();
-            newProducts.push({name, quantity, pricePerQuantity, total, checked: false});
-            return {...prevCurrentGastos, products: newProducts};
-        });
-        setName('');
-        setTotal(0);
-        setQuantity(0);
-        setPricePerQuantity(0);
+        try {
+            let newProducts = currentGastos.products.slice();
+            newProducts.push({
+                name, 
+                quantity, 
+                pricePerQuantity, 
+                total,
+            });
+            let response = await fetch(`/api/v1/gastos/${currentGastos._id}`,{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({list: {products: newProducts}})
+            });
+            let { data } = await response.json();
+            if(data._id){
+                setCurrentGastos(data);
+                setName('');
+                setTotal(0);
+                setQuantity(0);
+                setPricePerQuantity(0);
+            }else{
+                throw new Error();
+            };
+        } catch (error) {
+            return alert("No se puedo agregar. Intente de nuevo");
+        }
     };
     return (
         <div className="col-4">
