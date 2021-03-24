@@ -1,8 +1,8 @@
-exports.parseDate = ()=>{
+export const parseDate = ()=>{
     let date = new Date().toLocaleDateString().split("/");
     return `${date[0]}-${date[1]}-${date[2]}`;
 };
-exports.parseTotal = (bill)=>{
+export const parseTotal = (bill)=>{
     let total = 0;
     if(bill && bill.length > 0){
         bill.forEach(prodcut => {
@@ -12,7 +12,7 @@ exports.parseTotal = (bill)=>{
     return total;
 };
 let months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-exports.formatDate = (date)=>{
+export const formatDate = (date)=>{
     let splitDate = date.split("-");
     if(splitDate[0].length <= 1){
         splitDate[0] = "0" + splitDate[0]; 
@@ -32,7 +32,7 @@ let compareFunction = (itemA, itemB)=>{
         return dayA < dayB ? 1 : -1;
     };
 };
-exports.sortDates = (dates)=>{
+export const sortDates = (dates)=>{
     let sortedDays = dates.sort(compareFunction);
     return sortedDays;
 };
