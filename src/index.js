@@ -7,6 +7,11 @@ const APIRouter = require('./routers/APIRouter');
 const app = express();
 const PORT = process.env.PORT;
 connectDB();
+if(process.env.NODE_ENV === 'development'){
+    console.log("Development Enviroment");
+    const morgan = require('morgan');
+    app.use(morgan('dev'));
+};
 
 //------------------------------------MIDDLEWARES-----------------------------------------
 app.use(express.json());
@@ -16,11 +21,6 @@ app.use('/api/v1', APIRouter);
 
 
 //---------------------------------------SETUP--------------------------------------------
-if(process.env.NODE_ENV === 'development'){
-    console.log("Development Enviroment");
-    const morgan = require('morgan');
-    app.use(morgan('dev'));
-};
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../client', 'build')));
     app.get('*', (req, res, next)=>{

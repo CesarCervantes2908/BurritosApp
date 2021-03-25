@@ -14,9 +14,13 @@ bussinessRouter.post('/days/:date', async(req, res, next)=>{
         let queryResponse = await bussinessController.createDay(req.date);
         if (queryResponse.nModified > 0){
             let sellingDays = await bussinessController.getAllDays();
-            res.status(200).json({data: sellingDays})
+            if(sellingDays.length !== undefined){
+                res.status(200).json({data: sellingDays})
+            }else{
+                throw new Error(sellingDays);
+            };
         }else{
-            throw new Error(bussiness);
+            throw new Error("No se pudo actualizar");
         };
     } catch (error) {
         console.log(error)

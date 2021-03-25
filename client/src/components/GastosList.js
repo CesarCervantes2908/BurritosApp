@@ -46,7 +46,7 @@ const GastosList = ({ currentGastos, setCurrentGastos}) => {
             };
         };
         setFinishedList();
-    }, [bussinessTotal, currentGastos, setCurrentGastos, handleTotalChange ,currentGastos?.products]);
+    }, [currentGastos?.products]);
     
     return (
         <table className="table col-8">
